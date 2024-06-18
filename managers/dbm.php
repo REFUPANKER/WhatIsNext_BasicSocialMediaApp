@@ -1,5 +1,5 @@
 <?php
-$con = mysqli_connect("localhost", "root", "", "WhatIsNext_PhpGradProj");
+$con = mysqli_connect("server", "username", "password", "WhatIsNext");
 $con->set_charset("utf8");
 if ($con->connect_error) {
     die("Connection failed" . $con->connect_error);
