@@ -1,4 +1,4 @@
-create database WhatIsNext_PhpGradProj;
+create database WhatIsNext;
 
 drop table if exists users;
 create table users
