@@ -68,6 +68,7 @@ $user = getUser($_SESSION["user"]);
                     (
                         str_starts_with($_GET["view"], "share") ||
                         str_starts_with($_GET["view"], "search") ||
+                        str_starts_with($_GET["view"], "nextComments") ||
                         str_starts_with($_GET["view"], "news")
                     )
                 ) {

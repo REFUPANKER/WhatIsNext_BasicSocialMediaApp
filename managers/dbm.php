@@ -1,5 +1,5 @@
 <?php
-$con = mysqli_connect("server", "username", "password", "WhatIsNext");
+$con = mysqli_connect("localhost", "root", "", "WhatIsNext");
 $con->set_charset("utf8");
 if ($con->connect_error) {
     die("Connection failed" . $con->connect_error);
@@ -7,7 +7,7 @@ if ($con->connect_error) {
 
 session_start();
 
-$inactive = 5 *60;
+$inactive = 5 * 60;
 if (isset($_SESSION['timeout'])) {
     $session_life = time() - $_SESSION['timeout'];
     if ($session_life > $inactive) {
@@ -278,13 +278,27 @@ function CheckUserIsOwnerOfNext($nextId)
 function GetSingleNext($id)
 {
     $getNextType = selectData("select * from nexts where id=?", [$id]);
+    if (!isset($getNextType)) {
+        return;
+    }
     $nextTypes = array("n_text", "n_image", "n_video");
     $nextPropertyColumns = "," . ($getNextType["type"] == 1 ? "nx.content as content" : "nx.descr as descr");
     return selectData("select nx.*,u.id as userid,u.name as username $nextPropertyColumns from  " . $nextTypes[$getNextType["type"] - 1] . " as nx inner join users as u on u.id=? where nx.nextId=?", [$getNextType["user"], $id]);
 }
 // NEXTS end
 
+/*
+------- Comments system
+*/
+function GetCommentsOfNext($nextId)
+{
+    return selectData("select id,sender,content,sent from n_comments where nextId=?", [$nextId], single: false);
+}
 
+function SendComment($nextId, $comment)
+{
+    reqQuery("insert into n_comments (nextId,sender,content) values (?,?,?)", [$nextId, $_SESSION["user"], $comment]);
+}
 
 /*
 ------- Following system
@@ -392,4 +406,3 @@ function GetNextsFromFolloweds()
 {
     return selectData("select n.* from nexts as n inner join follows as f on f.follow=n.user where f.user=? order by n.type desc , n.id desc", [$_SESSION["user"]], false);
 }
-

@@ -72,6 +72,21 @@ descr varchar(500)
 );
 
 /*
+------- next comments system
+*/
+drop table if exists n_comments;
+create table n_comments(
+id int primary key AUTO_INCREMENT,
+nextId int,
+sender int,
+content varchar(500),
+sent datetime not null default current_timestamp
+);
+
+
+
+
+/*
 ------- followers system
 */
 
